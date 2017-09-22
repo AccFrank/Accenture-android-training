@@ -3,17 +3,31 @@ package com.accenture.accenturetairningdemo.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.accenture.accenturetairningdemo.R;
+import com.accenture.accenturetairningdemo.adepter.ContactAdepter;
+import com.accenture.accenturetairningdemo.model.Person;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ContactFragment.OnFragmentInteractionListener} interface
+ * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link ContactFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -23,6 +37,12 @@ public class ContactFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    @BindView(R.id.contactListview)
+    ListView contactListview;
+    Handler handler;
+    ArrayList<Person> personList;
+    Unbinder unbinder;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -65,7 +85,49 @@ public class ContactFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact, container, false);
+        String[] mName = {"liming", "xiaohong", "heizi", "ahuang"};
+        String[] mNum = {"1111", "2222", "3333", "4444"};
+        ArrayList<Map<String, Object>> mData = new ArrayList<Map<String, Object>>();
+        View view = inflater.inflate(R.layout.fragment_contact, container, false);
+
+        unbinder = ButterKnife.bind(this, view);
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                if (msg.what == 1) {
+                    Log.e("handler",((ArrayList<Person>)msg.obj).get(0).getPhone());
+                }
+            }
+        };
+        Person person = new Person();
+        person.setName("Jerry");
+        person.setPhone("13966666666");
+        person.setImg("http://img0.ph.126.net/9DCbrlPK7SyN10XryP9ISw==/1276489019401221876.png");
+        personList = new ArrayList<>();
+        for(int i= 0 ;i<=5 ;i++){
+            personList.add(person);
+        }
+
+        final ContactAdepter contactAdepter = new ContactAdepter(getContext(), personList, handler);
+        contactListview = view.findViewById(R.id.contactListview);
+
+//        SimpleAdapter adapter = new SimpleAdapter(getActivity(),mData,android.R.layout.simple_expandable_list_item_2,
+//                new String[]{"name","num"},new int[]{android.R.id.text1,android.R.id.text2});
+        contactListview.setAdapter(contactAdepter);
+        contactListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Person person = new Person();
+                person.setName("11");
+                person.setPhone("1");
+                person.setImg("1");
+                personList.add(person);
+                contactAdepter.notifyDataSetChanged();
+            }
+        });
+//        adapter.notifyDataSetChanged();
+//        contactAdepter.notifyDataSetChanged();
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -91,6 +153,13 @@ public class ContactFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

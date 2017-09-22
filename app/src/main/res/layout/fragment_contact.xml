@@ -2,12 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAccent"
     tools:context="com.accenture.accenturetairningdemo.fragment.ContactFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+>
+    <ListView
+        android:id="@+id/contactListview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="通讯录" />
+        android:layout_height="match_parent">
+
+    </ListView>
 
 </FrameLayout>
