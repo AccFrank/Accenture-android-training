@@ -1,19 +1,34 @@
 package com.accenture.accenturetairningdemo.fragment;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.accenture.accenturetairningdemo.R;
+import com.accenture.accenturetairningdemo.service.NotifacationService;
+import com.accenture.accenturetairningdemo.utils.PollingUtils;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+
+import static android.content.Context.BIND_AUTO_CREATE;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ManageFragment.OnFragmentInteractionListener} interface
+ * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link ManageFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -23,11 +38,22 @@ public class ManageFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    @BindView(R.id.start)
+    Button start;
+    @BindView(R.id.stop)
+    Button stop;
+    @BindView(R.id.binding)
+    Button binding;
+    @BindView(R.id.unbinding)
+    Button unbinding;
+    Unbinder unbinder;
+    @BindView(R.id.polling)
+    Button polling;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private NotifacationService.MyBinder myBinder;
     private OnFragmentInteractionListener mListener;
 
     public ManageFragment() {
@@ -65,7 +91,9 @@ public class ManageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_manage, container, false);
+        View view = inflater.inflate(R.layout.fragment_manage, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -90,6 +118,52 @@ public class ManageFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            myBinder = (NotifacationService.MyBinder) service;
+            myBinder.startDownload();
+        }
+    };
+
+    @OnClick({R.id.start, R.id.stop, R.id.binding, R.id.unbinding})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.start:
+                Intent startIntent = new Intent(getContext(), NotifacationService.class);
+                getContext().startService(startIntent);
+                break;
+            case R.id.stop:
+                Intent stopIntent = new Intent(getContext(), NotifacationService.class);
+                getContext().stopService(stopIntent);
+                break;
+            case R.id.binding:
+                Intent bindIntent = new Intent(getContext(), NotifacationService.class);
+                getContext().bindService(bindIntent, connection, BIND_AUTO_CREATE);
+                break;
+            case R.id.unbinding:
+                getContext().unbindService(connection);
+                break;
+        }
+    }
+
+    @OnClick(R.id.polling)
+    public void onViewClicked() {
+        Log.d("TAG", "beging()");
+        PollingUtils.startPollingService(getContext(), 1, NotifacationService.class,NotifacationService.ACTION);
     }
 
     /**

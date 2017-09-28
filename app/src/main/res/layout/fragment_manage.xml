@@ -7,27 +7,39 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50px">
+
             <Button
+                android:id="@+id/start"
+                android:layout_marginLeft="20px"
+                android:text="start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
-            <TextView
+            <Button
+                android:id="@+id/stop"
+                android:layout_marginLeft="20px"
+                android:text="stop"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="管理"
-               android:layout_centerInParent="true"
-                />
-
-            <ImageButton
+                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/binding"
+                android:text="binding"
+                android:layout_marginLeft="20px"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/bluemap_hover"
-                android:layout_marginLeft="600px"/>
-        </RelativeLayout>
+                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/unbinding"
+                android:text="unbinding"
+                android:layout_marginLeft="20px"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/polling"
+            android:text="polling"
+            android:layout_marginLeft="20px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
     <!-- TODO: Update blank fragment layout -->
