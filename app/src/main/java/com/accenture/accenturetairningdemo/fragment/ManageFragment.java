@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +48,8 @@ public class ManageFragment extends Fragment {
     Unbinder unbinder;
     @BindView(R.id.polling)
     Button polling;
+    @BindView(R.id.broadcast)
+    Button broadcast;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -139,7 +140,7 @@ public class ManageFragment extends Fragment {
         }
     };
 
-    @OnClick({R.id.start, R.id.stop, R.id.binding, R.id.unbinding})
+    @OnClick({R.id.start, R.id.stop, R.id.binding, R.id.unbinding,R.id.polling,R.id.broadcast})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.start:
@@ -157,14 +158,16 @@ public class ManageFragment extends Fragment {
             case R.id.unbinding:
                 getContext().unbindService(connection);
                 break;
+            case R.id.polling:
+                PollingUtils.startPollingService(getContext(), 1, NotifacationService.class, NotifacationService.ACTION);
+                break;
+            case R.id.broadcast:
+                Intent broadcast = new Intent("android.receiver.openApp");
+                getContext().sendBroadcast(broadcast,null);
+                break;
         }
     }
 
-    @OnClick(R.id.polling)
-    public void onViewClicked() {
-        Log.d("TAG", "beging()");
-        PollingUtils.startPollingService(getContext(), 1, NotifacationService.class,NotifacationService.ACTION);
-    }
 
     /**
      * This interface must be implemented by activities that contain this
