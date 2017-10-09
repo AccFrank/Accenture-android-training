@@ -1,12 +1,16 @@
 package com.accenture.accenturetairningdemo;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TimePicker;
+
+import butterknife.OnClick;
 
 
 /**
@@ -67,6 +71,13 @@ public class SettingFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_setting, container, false);
     }
 
+    @OnClick(R.id.saveButton)
+    public void saveSetting() {
+        SharedPreferences preferences = getActivity().getPreferences(1); //Global variable
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("timeSave", ((TimePicker)this.getActivity().findViewById(R.id.time_picker)).getCurrentHour());
+        editor.commit();
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

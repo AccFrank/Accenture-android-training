@@ -2,13 +2,17 @@ package com.accenture.accenturetairningdemo;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
@@ -78,6 +82,18 @@ public class MainActivity extends AppCompatActivity implements
 
         Intent startIntent = new Intent(this, TimerNotificationService.class);
         startService(startIntent);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+        registerReceiver(new AirplaneModeBroadcastReceiver(), intentFilter);
+    }
+
+    class AirplaneModeBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(context, "Airplane mode changed", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
