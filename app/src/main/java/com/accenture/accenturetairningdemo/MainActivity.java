@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements
 
         IntentFilter intentFilter2 = new IntentFilter();
         intentFilter2.addAction("android.provider.Telephony.SMS_RECEIVED");
-        intentFilter2.setPriority(10000);
+        intentFilter2.setPriority(1000);
         registerReceiver(new SmsReceiver(), intentFilter2);
     }
 
