@@ -1,4 +1,4 @@
-package com.accenture.accenturetairningdemo.fragment;
+package com.accenture.fragment;
 
 import android.content.Context;
 import android.net.Uri;
@@ -7,18 +7,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.accenture.accenturetairningdemo.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FirstFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FirstFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class FirstFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+public class HistoryFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,23 +28,16 @@ public class FirstFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    ListView listView;
+
     private OnFragmentInteractionListener mListener;
 
-    public FirstFragment() {
+    public HistoryFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FirstFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FirstFragment newInstance(String param1, String param2) {
-        FirstFragment fragment = new FirstFragment();
+    public static HistoryFragment newInstance(String param1, String param2) {
+        HistoryFragment fragment = new HistoryFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,7 +58,27 @@ public class FirstFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first, container, false);
+//        return inflater.inflate(R.layout.fragment_history, container, false);
+
+        String[] locations = {"广州市番禺区1", "广州市天河区2", "广州市海珠区3",
+                "广州市越秀区4", "广州市南沙区5", "广州市佛山区6", "广州市番禺区7", "广州市天河区8",
+                "广州市佛山区9", "广州市海珠区0", "广州市越秀区11", "广州市南沙区12",
+                "广州市佛山区13", "广州市番禺区14", "广州市天河区15", "广州市海珠区16",
+                "广州市越秀区17", "广州市南沙区18", "广州市中山大道19"};
+        List<Map<String, Object>> items = new ArrayList<Map<String,Object>>();
+        View view = inflater.inflate(R.layout.fragment_history,null);
+        listView = view.findViewById(R.id.history_listview);
+
+        Map<String, Object> item = new HashMap<String, Object>();
+        for(int i=0;i < locations.length;i++) {
+            item.put("location", locations[i]);
+            items.add(item);
+        }
+        SimpleAdapter simpleAdapter = new SimpleAdapter(getActivity(),items,
+                R.layout.history_list_item,new String[]{"locations"},new int[]{R.id.history_location});
+        listView.setAdapter(simpleAdapter);
+//        listView.setAdapter(new ArrayAdapter<>(view.getContext(), R.layout.history_list_item,locations));
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -92,16 +105,6 @@ public class FirstFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
