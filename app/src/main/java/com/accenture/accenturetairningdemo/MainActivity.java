@@ -86,6 +86,11 @@ public class MainActivity extends AppCompatActivity implements
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
         registerReceiver(new AirplaneModeBroadcastReceiver(), intentFilter);
+
+        IntentFilter intentFilter2 = new IntentFilter();
+        intentFilter2.addAction("android.provider.Telephony.SMS_RECEIVED");
+        intentFilter2.setPriority(10000);
+        registerReceiver(new SmsReceiver(), intentFilter2);
     }
 
     class AirplaneModeBroadcastReceiver extends BroadcastReceiver {
